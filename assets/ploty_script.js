@@ -62,9 +62,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initial empty plot data
   const emptyPlotData = [];
   const layout = {
-    title: 'Your Plot Title',
-    xaxis: { title: 'X-Axis' },
-    yaxis: { title: 'Y-Axis' },
+    title: 'J1909-3744 Residuals',
+    xaxis: { title: 'Delta T (years)' },
+    yaxis: { title: 'Peristron difference (ms)' },
   };
   // Initialize an array to store traces
   let traces = [];
