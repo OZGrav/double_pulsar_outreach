@@ -14,7 +14,7 @@ layout: default
     <div style="flex: 1;">
         <form id="data-form">
             {% for i in (1..27) %}
-                <label for="data{{ i }}"><a href="/epochs/?epoch={{ i }}">Epoch {{ i }}:</a></label>
+                <label for="data{{ i }}"><a href="/epochs/?epoch={{ i }}" target="_blank">Epoch {{ i }}:</a></label>
                 <input type="text" id="data{{ i }}" name="data{{ i }}" ><br>
             {% endfor %}
             <button type="submit">Plot Calculated</button>
