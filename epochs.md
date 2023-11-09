@@ -10,6 +10,7 @@ permalink: /epochs
 
 <body>
 	<div id='plot'><!-- Plotly chart will be drawn inside this DIV --></div>
+	<div id='residual'><!-- Plotly chart will be drawn inside this DIV --></div>
 	<script src='{{ site.baseurl }}/assets/epoch_orbit_fit.js'></script>
 
 </body>

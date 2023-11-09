@@ -3,6 +3,16 @@ const sinEquation = (x, amplitude, period, phase) => amplitude * Math.sin( ( 2 *
 function range(start, end, step = 1) {
   return Array.from({ length: Math.floor((end - start) / step) + 1 }, (_, i) => start + i * step);
 }
+function residual_calc(data, model) {
+  const result = [];
+  for (let i = 0; i < data.length; i++) {
+    console.log(data[i], model[i]);
+    const difference = data[i] - model[i];
+    console.log(difference);
+    result.push(difference);
+  }
+  return result;
+}
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -11,11 +21,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const initialPeriod = 30;
   const initialPhase = 10;
   const initialSin = [xRange.map(x => sinEquation(x, initialAmplitude, initialPeriod, initialPhase))];
-  console.log(initialSin);
 
   let amplitude = initialAmplitude;
   let period = initialPeriod;
   let phase = initialPhase;
+  let residual = residual_calc(initialSin[0], initialSin[0]);
 
 
   const modelTrace = {
@@ -30,6 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
     mode: 'markers',
     type: 'scatter',
     name: 'ToAs',
+    marker: { size: 12 }
+  };
+  var residualTrace = {
+    x: xRange,
+    y: residual,
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Residual',
     marker: { size: 12 }
   };
 
@@ -91,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const layout = {
     title: 'Plot with Slider',
     xaxis: { title: 'MJD' },
-    yaxis: { title: 'ToA Residual' },
+    yaxis: { title: 'ToAs' },
     sliders: sliders,
   };
 
@@ -100,8 +118,14 @@ document.addEventListener('DOMContentLoaded', function () {
   Plotly.restyle('plot', {'y': initialSin}, 1);
   const plot = document.getElementById('plot');
 
+  const residualLayout = {
+    xaxis: { title: 'MJD' },
+    yaxis: { title: 'ToA Residual', autorange: false, range: [-10, 10] },
+  };
+  Plotly.newPlot('residual', [residualTrace], residualLayout);
+  Plotly.restyle('residual', {'y': [residual]}, 0);
+
   plot.on('plotly_sliderchange', (event) => {
-    console.log(event);
     if (event.slider.currentvalue.prefix.startsWith('Amplitude')) {
       amplitude = parseFloat(event.step.label);
     }
@@ -112,7 +136,10 @@ document.addEventListener('DOMContentLoaded', function () {
       phase = parseFloat(event.step.label);
     }
     const newY = xRange.map(x => sinEquation(x, amplitude, period, phase));
-    console.log("initialSin", initialSin)
     Plotly.restyle('plot', {'y': [newY]}, 0);
+
+    // Update residual
+    const newResidual = residual_calc(initialSin[0], newY);
+    Plotly.restyle('residual', {'y': [newResidual]}, 0);
   });
 });
