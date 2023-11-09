@@ -1,14 +1,22 @@
+// Update the title based on the epoch number in the URL
+const urlParams = new URLSearchParams(window.location.search);
+const epoch_url = urlParams.get('epoch');
+if (epoch_url) {
+  document.title = "Epoch " + epoch_url + " Orbit Fit";
+  console.log(document.querySelector('.project-name').innerText);
+  document.querySelector('.project-name').innerText = "Epoch " + epoch_url + " Orbit Fit";
+}
+
 const sinEquation = (x, amplitude, period, phase) => amplitude * Math.sin( ( 2 * Math.PI / period ) * ( x + phase ) );
 
 function range(start, end, step = 1) {
   return Array.from({ length: Math.floor((end - start) / step) + 1 }, (_, i) => start + i * step);
 }
+
 function residual_calc(data, model) {
   const result = [];
   for (let i = 0; i < data.length; i++) {
-    console.log(data[i], model[i]);
     const difference = data[i] - model[i];
-    console.log(difference);
     result.push(difference);
   }
   return result;
@@ -107,7 +115,8 @@ document.addEventListener('DOMContentLoaded', function () {
   ];
 
   const layout = {
-    title: 'Plot with Slider',
+    width: 800,
+    height: 600,
     xaxis: { title: 'MJD' },
     yaxis: { title: 'ToAs' },
     sliders: sliders,
@@ -119,6 +128,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const plot = document.getElementById('plot');
 
   const residualLayout = {
+    width: 800,
+    height: 400,
     xaxis: { title: 'MJD' },
     yaxis: { title: 'ToA Residual', autorange: false, range: [-10, 10] },
   };
