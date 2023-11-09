@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initial empty plot data
   const emptyPlotData = [];
   const layout = {
+    width: 800,
+    height: 400,
     title: 'J1909-3744 Residuals',
     xaxis: { title: 'Delta T (years)' },
     yaxis: { title: 'Peristron difference (ms)' },

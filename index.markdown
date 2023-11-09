@@ -10,8 +10,8 @@ layout: default
 </head>
 
 <body>
-    <div style="display: flex;">
-    <div style="flex: 1;">
+    <div class="centered-div">
+    <div class="two-divs">
         <form id="data-form">
             {% for i in (1..27) %}
                 <label for="data{{ i }}"><a href="/epochs/?epoch={{ i }}" target="_blank">Epoch {{ i }}:</a></label>
@@ -23,9 +23,11 @@ layout: default
             <button type="submit">Plot Predicted</button>
         </form>
     </div>
-    <div style="flex: 1;">
+    <div class="two-divs">
         <div id='plot'><!-- Plotly chart will be drawn inside this DIV --></div>
     </div>
     </div>
     <script src='{{ site.baseurl }}/assets/ploty_script.js'></script>
 </body>
+
+<link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">

@@ -11,3 +11,37 @@ footer {
     text-decoration: none;
     border-radius: 5px;
 }
+
+.main-content {
+    max-width: 128rem;
+}
+.centered-div {
+    width: 80%; /* Adjust the width based on your preference */
+    margin: 0 auto; /* Center the div horizontally */
+    padding: 20px; /* Add padding to the div */
+    box-sizing: border-box; /* Include padding and border in the width */
+    display: flex;
+}
+.two-divs {
+    padding: 20px; /* Add padding to the div */
+}
+#data-form {
+    margin: 0 auto; /* Center the form */
+    text-align: right; /* Right-align the content inside the form */
+}
+#plot_expected {
+    /* max-width: 200px; Adjust the max-width based on your preference */
+    margin: 0 auto; /* Center the form */
+    text-align: right; /* Right-align the content inside the form */
+}
+
+
+input {
+    width: 8rem; /* Make the input fields take full width */
+    box-sizing: border-box; /* Include padding and border in the width */
+    margin-bottom: 5px;
+}
+
+button {
+    margin-bottom: 5px;
+}
