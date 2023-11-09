@@ -18,10 +18,19 @@ document.addEventListener('DOMContentLoaded', function () {
   let phase = initialPhase;
 
 
-  const trace = {
+  const modelTrace = {
     x: xRange,
     y: initialSin,
     type: 'scatter',
+    name: 'Orbit Model',
+  };
+  var inputDataTrace = {
+    x: xRange,
+    y: initialSin,
+    mode: 'markers',
+    type: 'scatter',
+    name: 'ToAs',
+    marker: { size: 12 }
   };
 
 
@@ -86,7 +95,9 @@ document.addEventListener('DOMContentLoaded', function () {
     sliders: sliders,
   };
 
-  Plotly.newPlot('plot', [trace], layout);
+  Plotly.newPlot('plot', [modelTrace, inputDataTrace], layout);
+  Plotly.restyle('plot', {'y': initialSin}, 0);
+  Plotly.restyle('plot', {'y': initialSin}, 1);
   const plot = document.getElementById('plot');
 
   plot.on('plotly_sliderchange', (event) => {
@@ -101,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
       phase = parseFloat(event.step.label);
     }
     const newY = xRange.map(x => sinEquation(x, amplitude, period, phase));
-    Plotly.update(plot, { y: [newY] });
+    console.log("initialSin", initialSin)
+    Plotly.restyle('plot', {'y': [newY]}, 0);
   });
 });
