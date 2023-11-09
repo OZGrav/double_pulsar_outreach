@@ -1,13 +1,22 @@
-const updateEquation = (x, a, b) => a * x * x + b;
+const sinEquation = (x, amplitude, period, phase) => amplitude * Math.sin( ( 2 * Math.PI / period ) * ( x + phase ) );
+
+function range(start, end, step = 1) {
+  return Array.from({ length: Math.floor((end - start) / step) + 1 }, (_, i) => start + i * step);
+}
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  const initialX = [1,2,3]; // Initial x-values
-  const initialY = [1,2,3]; // Corresponding initial y-values
+  const xRange = range(1, 100);
+  const initialAmplitude = 1;
+  const initialPeriod = 30;
+  const initialPhase = 10;
+  const initialSin = [xRange.map(x => sinEquation(x, initialAmplitude, initialPeriod, initialPhase))];
+  console.log(initialSin);
+
 
   const trace = {
-    x: initialX,
-    y: initialY,
+    x: xRange,
+    y: initialSin,
     type: 'scatter',
   };
 
@@ -16,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     sliderSteps.push({
       method: 'relayout',
       label: a.toFixed(1),
-      args: ['x', [initialX.map(x => updateEquation(x, a, 1, 0))]],
+      args: ['x', [xRange.map(x => sinEquation(x, a, initialPeriod, initialPhase))]],
     });
   }
 
@@ -45,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   plot.on('plotly_sliderchange', (event) => {
     const a = event.step.label;
-    const newY = initialX.map(x => updateEquation(x, parseFloat(a), 1, 0));
+    const newY = xRange.map(x => sinEquation(x, parseFloat(a), initialPeriod, initialPhase));
     Plotly.update(plot, { y: [newY] });
   });
 });
