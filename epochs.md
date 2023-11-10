@@ -19,13 +19,6 @@ and the bottom is the phase of the orbit (when the sine wave starts).
   <!-- Value -->
   <div class="box-value" id="true-value"></div>
 </div>
-<div class="display-box">
-  <!-- Title -->
-  <div class="box-title">Fit Value (ms)</div>
-
-  <!-- Value -->
-  <div class="box-value" id="fit-value"></div>
-</div>
 
 <head>
 	<!-- Load plotly.js into the DOM -->
