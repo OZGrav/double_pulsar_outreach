@@ -6,8 +6,41 @@ if (epoch_url) {
   console.log(document.querySelector('.project-name').innerText);
   document.querySelector('.project-name').innerText = "Epoch " + epoch_url + " Orbit Fit";
 }
+const epoch_zero_pad = epoch_url < 10 ? '0' + epoch_url : epoch_url;
 
-const sinEquation = (x, amplitude, period, phase) => amplitude * Math.sin( ( 2 * Math.PI / period ) * ( x + phase ) );
+// number of orbits for each of the epochs
+const epoch_orbit = {
+  "1": 226.128565454.toFixed(0),
+  "2": 509.103936198.toFixed(0),
+  "3": 814.129563006.toFixed(0),
+  "4": 1105.090793138.toFixed(0),
+  "5": 0.0.toFixed(0),
+  "6": 1679.084698178.toFixed(0),
+  "7": 1964.154749043.toFixed(0),
+  "8": 2313.113649158.toFixed(0),
+  "9": 2608.063934618.toFixed(0),
+  "10": 2928.050490437.toFixed(0),
+  "11": 3203.049085177.toFixed(0),
+  "12": 3503.036537798.toFixed(0),
+  "12": 3503.036537798.toFixed(0),
+  "13": 3826.001625193.toFixed(0),
+  "14": 4265.028388363.toFixed(0),
+  "15": 4635.993986476.toFixed(0),
+  "16": 4940.00162813.toFixed(0),
+  "17": 5300.964026289.toFixed(0),
+  "18": 5561.040620811.toFixed(0),
+  "19": 5794.988285849.toFixed(0),
+  "20": 0.0.toFixed(0),
+  "21": 6382.954259388.toFixed(0),
+  "22": 6666.007307285.toFixed(0),
+  "23": 7094.972144746.toFixed(0),
+  "24": 7299.986870266.toFixed(0),
+  "25": 7531.989070608.toFixed(0),
+  "26": 9990.977891796.toFixed(0),
+};
+
+// convert phase from ms to days
+const sinEquation = (x, amplitude, period, phase) => amplitude * Math.sin( ( 2 * Math.PI / period ) * ( x + ( phase / 86400 ) ) );
 
 function range(start, end, step = 1) {
   return Array.from({ length: Math.floor((end - start) / step) + 1 }, (_, i) => start + i * step);
@@ -50,7 +83,7 @@ function parseDataFile(content) {
 
   lines.forEach(line => {
     const [value1, value2] = line.split(' ').map(parseFloat);
-    days.push(value1);
+    days.push(value1 - 0.10225155996380000000 * epoch_orbit[epoch_url]);
     residuals.push(value2*10e3);
   });
 
@@ -59,7 +92,7 @@ function parseDataFile(content) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  readFile('/assets/residuals/residuals.26.dat')
+  readFile('/assets/residuals/residuals.' + epoch_zero_pad + '.dat')
   .then(result => {
     // Process the result here
     const { days, residuals } = result;
@@ -90,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
       mode: 'markers',
       type: 'scatter',
       name: 'ToAs',
-      marker: { size: 12 }
+      marker: { size: 4 }
     };
     var residualTrace = {
       x: days,
@@ -98,32 +131,32 @@ document.addEventListener('DOMContentLoaded', function () {
       mode: 'markers',
       type: 'scatter',
       name: 'Residual',
-      marker: { size: 12 }
+      marker: { size: 4 }
     };
 
 
     const amplitudeSliderSteps = [];
     const periodSliderSteps = [];
     const phaseSliderSteps = [];
-    for (let a = 0; a <= 10; a += 0.1) {
+    for (let a = 0; a <= 8; a += 0.1) {
       amplitudeSliderSteps.push({
         method: 'relayout',
         label: a.toFixed(1),
-        args: ['yaxis.range', [-10, 10]],
+        args: ['yaxis.range', [-a * 1.2, a * 1.2]],
       });
     }
-    for (let a = 0; a <= 0.1; a += 0.001) {
+    for (let a = 0.08; a <= 0.12; a += 0.001) {
       periodSliderSteps.push({
         method: 'relayout',
         label: a.toFixed(3),
-        args: ['yaxis.range', [-10, 10]],
+        args: [],
       });
     }
-    for (let a = 0; a <= 1; a += 0.01) {
+    for (let a = -8000; a <= 0 ; a += 10) {
       phaseSliderSteps.push({
         method: 'relayout',
-        label: a.toFixed(2),
-        args: ['yaxis.range', [-10, 10]],
+        label: a.toFixed(0),
+        args: [],
       });
     }
 
@@ -152,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
         steps: phaseSliderSteps,
         active: 10,  // Initial position of the slider
         currentvalue: {
-          prefix: 'Phase: ',
+          prefix: 'Phase offset (ms): ',
           xanchor: 'right',
           visible: true,
           offset: 125,
@@ -177,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
       width: 800,
       height: 400,
       xaxis: { title: 'MJD' },
-      yaxis: { title: 'Residual between model and fit', autorange: false, range: [-10, 10] },
+      yaxis: { title: 'Residual between model and fit', autorange: false, range: [-3, 3] },
     };
     Plotly.newPlot('residual', [residualTrace], residualLayout);
     Plotly.restyle('residual', {'y': [fitResidual]}, 0);
@@ -192,11 +225,13 @@ document.addEventListener('DOMContentLoaded', function () {
       if (event.slider.currentvalue.prefix.startsWith('Phase')) {
         phase = parseFloat(event.step.label);
       }
+      console.log("phase:", phase);
       const newY = days.map(x => sinEquation(x, amplitude, period, phase));
+      console.log("newY:", newY);
       Plotly.restyle('plot', {'y': [newY]}, 0);
 
       // Update residual
-      const newResidual = residual_calc(initialSin[0], newY);
+      const newResidual = residual_calc(residuals, newY);
       Plotly.restyle('residual', {'y': [newResidual]}, 0);
     });
   })
