@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const layout = {
     width: 800,
     height: 400,
-    title: 'J1909-3744 Residuals',
+    title: 'Change in the Double Pulsar Peristron',
     xaxis: { title: 'Delta T (years)' },
     yaxis: { title: 'Peristron difference (ms)' },
   };

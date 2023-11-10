@@ -45,3 +45,25 @@ input {
 button {
     margin-bottom: 5px;
 }
+
+.display-box {
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px;
+    width: 300px;
+}
+
+/* Title styling */
+.box-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #3498db;
+}
+
+/* Value styling */
+.box-value {
+    font-size: 24px;
+    color: #2ecc71;
+}

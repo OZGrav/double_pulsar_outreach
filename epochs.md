@@ -11,6 +11,21 @@ The top slider is the amplitude (height of the sine wave),
 the middle slider is the period of the of the orbit (width of sine wave before it repeats),
 and the bottom is the phase of the orbit (when the sine wave starts).
 
+<div class="display-box">
+  <!-- Title -->
+  <div class="box-title">True Value (ms)</div>
+
+  <!-- Value -->
+  <div class="box-value" id="true-value"></div>
+</div>
+<div class="display-box">
+  <!-- Title -->
+  <div class="box-title">Fit Value (ms)</div>
+
+  <!-- Value -->
+  <div class="box-value" id="fit-value"></div>
+</div>
+
 <head>
 	<!-- Load plotly.js into the DOM -->
     <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>

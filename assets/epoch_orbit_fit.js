@@ -38,9 +38,38 @@ const epoch_orbit = {
   "25": 7531.989070608.toFixed(0),
   "26": 9990.977891796.toFixed(0),
 };
+const epoch_delay = {
+  "1": -0.859352,
+  "2": -2.66164,
+  "3": -3.26074,
+  "4": -6.41909,
+  "5": -8.74714,
+  "6": -15.4034,
+  "7": -21.7123,
+  "8": -29.5946,
+  "9": -37.8259,
+  "10": -47.6842,
+  "11": -56.7043,
+  "12": -67.4222,
+  "13": -81.057,
+  "14": -99.5933,
+  "15": -117.245,
+  "16": -133.946,
+  "17": -154.881,
+  "18": -169.906,
+  "19": -184.836,
+  "20": -204.509,
+  "21": -224.476,
+  "22": -244.115,
+  "23": -276.808,
+  "24": -292.775,
+  "25": -311.913,
+  "26": -548.692,
+  "27": -592.263,
+};
 
 // convert phase from ms to days
-const sinEquation = (x, amplitude, period, phase) => amplitude * Math.sin( ( 2 * Math.PI / period ) * ( x + ( phase / 86400 ) ) );
+const sinEquation = (x, amplitude, phase) => amplitude * Math.sin( ( 2 * Math.PI / 0.10225155555593921919 ) * ( x + ( phase / 86400 ) ) );
 
 function range(start, end, step = 1) {
   return Array.from({ length: Math.floor((end - start) / step) + 1 }, (_, i) => start + i * step);
@@ -83,7 +112,7 @@ function parseDataFile(content) {
 
   lines.forEach(line => {
     const [value1, value2] = line.split(' ').map(parseFloat);
-    days.push(value1 - 0.10225155996380000000 * epoch_orbit[epoch_url]);
+    days.push(value1 - 0.10225155555593921919 * epoch_orbit[epoch_url]);
     residuals.push(value2*10e3);
   });
 
@@ -99,10 +128,14 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("days:", days);
     console.log("residuals:", residuals);
 
+    // Load real value
+    const displayDiv = document.getElementById('true-value');
+    displayDiv.innerHTML = epoch_delay[epoch_url];
+
     const initialAmplitude = 1;
     const initialPeriod = 0.1;
     const initialPhase = 0;
-    const initialSin = [days.map(x => sinEquation(x, initialAmplitude, initialPeriod, initialPhase))];
+    const initialSin = [days.map(x => sinEquation(x, initialAmplitude, initialPhase))];
 
     let amplitude = initialAmplitude;
     let period = initialPeriod;
@@ -136,20 +169,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const amplitudeSliderSteps = [];
-    const periodSliderSteps = [];
     const phaseSliderSteps = [];
     for (let a = 0; a <= 8; a += 0.1) {
       amplitudeSliderSteps.push({
         method: 'relayout',
         label: a.toFixed(1),
         args: ['yaxis.range', [-a * 1.2, a * 1.2]],
-      });
-    }
-    for (let a = 0.08; a <= 0.12; a += 0.001) {
-      periodSliderSteps.push({
-        method: 'relayout',
-        label: a.toFixed(3),
-        args: [],
       });
     }
     for (let a = -8000; a <= 0 ; a += 10) {
@@ -172,23 +197,13 @@ document.addEventListener('DOMContentLoaded', function () {
         },
       },
       {
-        steps: periodSliderSteps,
-        active: 10,  // Initial position of the slider
-        currentvalue: {
-          prefix: 'Period: ',
-          xanchor: 'center',
-          visible: true,
-          offset: 75,
-        },
-      },
-      {
         steps: phaseSliderSteps,
         active: 10,  // Initial position of the slider
         currentvalue: {
           prefix: 'Phase offset (s): ',
           xanchor: 'right',
           visible: true,
-          offset: 125,
+          offset: 75,
         },
       },
     ];
@@ -219,20 +234,20 @@ document.addEventListener('DOMContentLoaded', function () {
       if (event.slider.currentvalue.prefix.startsWith('Amplitude')) {
         amplitude = parseFloat(event.step.label);
       }
-      if (event.slider.currentvalue.prefix.startsWith('Period')) {
-        period = parseFloat(event.step.label);
-      }
       if (event.slider.currentvalue.prefix.startsWith('Phase')) {
         phase = parseFloat(event.step.label);
       }
       console.log("phase:", phase);
-      const newY = days.map(x => sinEquation(x, amplitude, period, phase));
+      const newY = days.map(x => sinEquation(x, amplitude, phase));
       console.log("newY:", newY);
       Plotly.restyle('plot', {'y': [newY]}, 0);
+      const displayDiv = document.getElementById('fit-value');
+      displayDiv.innerHTML = phase*1000;
 
       // Update residual
       const newResidual = residual_calc(residuals, newY);
       Plotly.restyle('residual', {'y': [newResidual]}, 0);
+
     });
   })
   .catch(error => {
