@@ -7,7 +7,24 @@ layout: default
 <head>
 	<!-- Load plotly.js into the DOM -->
     <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
+	<script async src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script async id="MathJax-script" async="true" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </head>
+
+
+$$
+{\mathrm {Arrival}}(t) = \frac{1}{2}\frac{dP_{\mathrm b}}{dt} \frac{T^2}{P_{\mathrm b}}
+$$
+
+Now ...Einstein predicts that
+
+$$
+\frac{dP_{\mathrm b}}{dt} = \frac{-192 \pi G^{5/3}}{5c^5}\left(\frac{P_{\mathrm b}}{2 \pi}\right)^{-5/3}\left(\frac{1}{1-e^2}\right)^{7/2}\left( 1+\frac{73}{24}e^2+\frac{37}{96}e^4 \right)\frac{m_p m_c}{(m_p+m_c)^{1/3}}
+$$
+
+Orbital Shrinkage is $$\frac{da}{d {\mathrm {orbit}}} = \frac{\frac{dP_b}{dt} \sqrt{GM}}{3\pi\sqrt{ac}} P_{\mathrm b} $$
+
+Now \\( m_c=1.248866 \\)  M\\(_{\mathrm{sun}}\\), \\(m_p=1.338186\\) M\\( _\{\mathrm{sun}} \\), \\(a_p=1.4150223\, c\\), P\\(_b=0.102251559\\) days, \\(e=0.0877774229\\)
 
 <body>
     <div class="centered-div">

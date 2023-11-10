@@ -3,6 +3,7 @@ layout: default
 title:  "Epoch"
 permalink: /epochs
 ---
+
 Use the three sliders to get the orbit model (blue line) as close to the time of arrival data (orange dots).
 The bottom plot is the residual (difference between orbital model and time of arrivals) so it when
 it is close to zero, you have found the correct value (remember to write it down!).
