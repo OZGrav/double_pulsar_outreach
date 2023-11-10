@@ -28,35 +28,59 @@ const deltaTyear = [
   2.90367
 ];
 
-const T0diff = [
-  -0.859352,
-  -2.66164,
-  -3.26074,
-  -6.41909,
-  -8.74714,
-  -15.4034,
-  -21.7123,
-  -29.5946,
-  -37.8259,
-  -47.6842,
-  -56.7043,
-  -67.4222,
-  -81.057,
-  -99.5933,
-  -117.245,
-  -133.946,
-  -154.881,
-  -169.906,
-  -184.836,
-  -204.509,
-  -224.476,
-  -244.115,
-  -276.808,
-  -292.775,
-  -311.913,
-  -548.692,
-  -592.263,
-];
+// const T0diff = [
+//   -0.859352,
+//   -2.66164,
+//   -3.26074,
+//   -6.41909,
+//   -8.74714,
+//   -15.4034,
+//   -21.7123,
+//   -29.5946,
+//   -37.8259,
+//   -47.6842,
+//   -56.7043,
+//   -67.4222,
+//   -81.057,
+//   -99.5933,
+//   -117.245,
+//   -133.946,
+//   -154.881,
+//   -169.906,
+//   -184.836,
+//   -204.509,
+//   -224.476,
+//   -244.115,
+//   -276.808,
+//   -292.775,
+//   -311.913,
+//   -548.692,
+//   -592.263,
+// ];
+
+G = 6.6743 * 10 ** (-11);
+c = 299792458;
+Mo = 1.989 * 10 ** 30;
+Mc = 1.248866 * Mo;
+Mp = 1.338186 * Mo;
+Pb = 0.10225155555593921919 * 86400;
+e = 0.0877774229;
+dPdT = (-192 * Math.PI * G **(5/3)) / (5 * c ** 5) *
+  ( Pb / (2*Math.PI))**(-5/3) *
+  (1 - e**2)**(-7/2) *
+  (1 + 73.0/24.0 * e**2 + 37.0/96.0 * e**4) *
+  (Mp * Mc / (Mp + Mc)**(1/3));
+
+console.log(dPdT);
+
+
+const T0diff = [];
+for (let i = 0; i < deltaTyear.length; i++) {
+  T0diff.push( 1e3 * dPdT * (deltaTyear[i] * 86400 * 365) ** 2 / Pb / 2);
+}
+console.log(T0diff);
+
+
 
 function residual_calc(data, model) {
   const result = [];
@@ -95,10 +119,10 @@ document.addEventListener('DOMContentLoaded', function () {
   };
   const layout = {
     width: 800,
-    height: 400,
+    height: 600,
     title: 'Change in the Double Pulsar Peristron',
     xaxis: { title: 'Delta T (years)' },
-    yaxis: { title: 'Peristron difference (ms)' },
+    yaxis: { title: 'Peristron difference (milliseconds)' },
   };
 
   // Render the empty plot on page load
@@ -114,10 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
   };
   const residualLayout = {
     width: 800,
-    height: 400,
+    height: 600,
     title: 'Difference between Calculated and Predicted Data',
     xaxis: { title: 'Delta T (years)' },
-    yaxis: { title: 'Peristron difference (ms)' },
+    yaxis: { title: 'Peristron difference (milliseconds)' },
   };
   Plotly.newPlot('residual', [residualTrace], residualLayout);
 

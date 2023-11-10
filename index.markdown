@@ -26,6 +26,8 @@ Orbital Shrinkage is $$\frac{da}{d {\mathrm {orbit}}} = \frac{\frac{dP_b}{dt} \s
 
 Now \\( m_c=1.248866 \\)  M\\(_{\mathrm{sun}}\\), \\(m_p=1.338186\\) M\\( _\{\mathrm{sun}} \\), \\(a_p=1.4150223\, c\\), P\\(_b=0.102251559\\) days, \\(e=0.0877774229\\)
 
+Now if we adopt the above values, \\( dP_b/dt = -1.24319\times 10^{-12} \\)s/s and change in separation per orbit is \\(-2.710 \\) mm per orbit.
+
 <body>
     <div class="centered-div">
     <div class="two-divs">
