@@ -32,9 +32,14 @@ Now if we adopt the above values, \\( dP_b/dt = -1.24319\times 10^{-12} \\)s/s a
     <div class="centered-div">
     <div class="two-divs">
         <form id="data-form">
-            {% for i in (1..27) %}
-                <label for="data{{ i }}"><a href="/epochs/?epoch={{ i }}" target="_blank">Epoch {{ i }}:</a></label>
-                <input type="text" id="data{{ i }}" name="data{{ i }}" ><br>
+            {% for i in (1..26) %}
+                {% if i != 5 and i != 20 %}
+                    <label for="data{{ i }}"><a href="/epochs/?epoch={{ i }}" target="_blank">Epoch {{ i }}:</a></label>
+                    <input type="text" id="data{{ i }}" name="data{{ i }}" ><br>
+                {% else %}
+                    <label for="data{{ i }}">Epoch {{ i }}:</label>
+                    <input type="text" id="data{{ i }}" name="data{{ i }}" ><br>
+                {% endif %}
             {% endfor %}
             <button type="submit">Plot Calculated</button>
         </form>
