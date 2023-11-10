@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
         steps: phaseSliderSteps,
         active: 10,  // Initial position of the slider
         currentvalue: {
-          prefix: 'Phase offset (ms): ',
+          prefix: 'Phase offset (s): ',
           xanchor: 'right',
           visible: true,
           offset: 125,
