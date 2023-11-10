@@ -60,7 +60,28 @@ const T0diff = [
 
 document.addEventListener('DOMContentLoaded', function () {
   // Initial empty plot data
-  const emptyPlotData = [];
+  const epochLabels = [];
+  for (let i = 1; i <= 27; i++) {
+    epochLabels.push(`Epoch ${i}`);
+  }
+  var calcDataTrace = {
+    x: deltaTyear,
+    y: [],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Calculated Data',
+    text: epochLabels,
+    marker: { size: 12 }
+  };
+  var predictedDataTrace = {
+    x: deltaTyear,
+    y: [],
+    mode: 'lines',
+    type: 'scatter',
+    name: 'Predicted Data',
+    text: epochLabels,
+    marker: { size: 12 }
+  };
   const layout = {
     width: 800,
     height: 400,
@@ -68,62 +89,30 @@ document.addEventListener('DOMContentLoaded', function () {
     xaxis: { title: 'Delta T (years)' },
     yaxis: { title: 'Peristron difference (ms)' },
   };
-  // Initialize an array to store traces
-  let traces = [];
 
   // Render the empty plot on page load
-  Plotly.newPlot('plot', emptyPlotData, layout);
+  Plotly.newPlot('plot', [calcDataTrace, predictedDataTrace], layout);
 
   document.getElementById('data-form').addEventListener('submit', function (event) {
       event.preventDefault();
       // Read data from the input fields and store it in an array
       const inputDataArray = [];
-      const epochLabels = [];
       for (let i = 1; i <= 27; i++) {
         const inputField = document.getElementById(`data${i}`);
         const inputValue = parseFloat(inputField.value);
         inputDataArray.push(inputValue);
-        epochLabels.push(`Epoch ${i}`);
       }
       console.log(inputDataArray);
 
-      var calcDataTrace = {
-        x: deltaTyear,
-        y: inputDataArray,
-        mode: 'markers',
-        type: 'scatter',
-        name: 'Calculated Data',
-        text: epochLabels,
-        marker: { size: 12 }
-      };
-      // Add the new trace to the array of traces
-      traces.push(calcDataTrace);
-
       // Update the plot with all the traces
-      Plotly.newPlot('plot', traces, layout);
+      Plotly.restyle('plot', {'y': [inputDataArray]}, 0);
   });
 
 
   document.getElementById('plot_expected').addEventListener('submit', function (event) {
     event.preventDefault();
-    const epochLabels = [];
-    for (let i = 1; i <= 27; i++) {
-      epochLabels.push(`Epoch ${i}`);
-    }
-
-    var predictedDataTrace = {
-      x: deltaTyear,
-      y: T0diff,
-      mode: 'lines',
-      type: 'scatter',
-      name: 'Predicted Data',
-      text: epochLabels,
-      marker: { size: 12 }
-    };
-    // Add the new trace to the array of traces
-    traces.push(predictedDataTrace);
 
     // Update the plot with all the traces
-    Plotly.newPlot('plot', traces, layout);
+    Plotly.restyle('plot', {'y': [T0diff]}, 1);
   });
 });
