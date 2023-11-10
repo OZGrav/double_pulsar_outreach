@@ -25,6 +25,7 @@ layout: default
     </div>
     <div class="two-divs">
         <div id='plot'><!-- Plotly chart will be drawn inside this DIV --></div>
+	    <div id='residual'><!-- Plotly chart will be drawn inside this DIV --></div>
     </div>
     </div>
     <script src='{{ site.baseurl }}/assets/ploty_script.js'></script>

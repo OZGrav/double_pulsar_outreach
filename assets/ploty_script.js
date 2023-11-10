@@ -58,6 +58,17 @@ const T0diff = [
   -592.263,
 ];
 
+function residual_calc(data, model) {
+  const result = [];
+  console.log("data:", data);
+  console.log("model:", model);
+  for (let i = 0; i < model.length; i++) {
+    const difference = data[i] - model[i];
+    result.push(difference);
+  }
+  return result;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   // Initial empty plot data
   const epochLabels = [];
@@ -92,6 +103,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Render the empty plot on page load
   Plotly.newPlot('plot', [calcDataTrace, predictedDataTrace], layout);
+  var residualTrace = {
+    x: deltaTyear,
+    y: [],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Predicted Data',
+    text: epochLabels,
+    marker: { size: 12 }
+  };
+  const residualLayout = {
+    width: 800,
+    height: 400,
+    title: 'Difference between Calculated and Predicted Data',
+    xaxis: { title: 'Delta T (years)' },
+    yaxis: { title: 'Peristron difference (ms)' },
+  };
+  Plotly.newPlot('residual', [residualTrace], residualLayout);
 
   document.getElementById('data-form').addEventListener('submit', function (event) {
       event.preventDefault();
@@ -106,6 +134,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Update the plot with all the traces
       Plotly.restyle('plot', {'y': [inputDataArray]}, 0);
+
+      residual_array = residual_calc(inputDataArray, T0diff);
+      console.log("residual_array:", residual_array);
+      Plotly.restyle('residual', {'y': [residual_array]}, 0);
   });
 
 
