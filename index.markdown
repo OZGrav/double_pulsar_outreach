@@ -43,11 +43,30 @@ Now if we adopt the above values, \\( dP_b/dt = -1.24319\times 10^{-12} \\)s/s a
             {% endfor %}
             <button type="submit">Plot Calculated</button>
         </form>
-        <form id="plot_expected">
+        <!-- <form id="plot_expected">
             <button type="submit">Plot Predicted</button>
-        </form>
+        </form> -->
     </div>
     <div class="two-divs">
+        <form id="plot_expected">
+            <table>
+                <tr>
+                    <td><label for="mc">$$ m_c $$</label></td>
+                    <td><label for="mp">$$ m_p $$</label></td>
+                    <td><label for="Pb">$$ P_b $$</label></td>
+                    <td><label for="e">$$ e $$</label></td>
+                    <!-- <td><label for="dPdt">$$ \frac{dP_{\mathrm b}}{dt} $$</label></td> -->
+                </tr>
+                <tr>
+                    <td><input type="text" id="mc" name="mc"></td>
+                    <td><input type="text" id="mp" name="mp"></td>
+                    <td><input type="text" id="Pb" name="Pb"></td>
+                    <td><input type="text" id="e" name="e"></td>
+                    <!-- <td><input type="text" id="dPdt" name="dPdt"></td> -->
+                    <td><button type="submit">Plot Predicted</button></td>
+                </tr>
+            </table>
+        </form>
         <div id='plot'><!-- Plotly chart will be drawn inside this DIV --></div>
 	    <div id='residual'><!-- Plotly chart will be drawn inside this DIV --></div>
     </div>

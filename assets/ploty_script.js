@@ -28,64 +28,19 @@ const deltaTyear = [
   2.90367
 ];
 
-// const T0diff = [
-//   -0.859352,
-//   -2.66164,
-//   -3.26074,
-//   -6.41909,
-//   -8.74714,
-//   -15.4034,
-//   -21.7123,
-//   -29.5946,
-//   -37.8259,
-//   -47.6842,
-//   -56.7043,
-//   -67.4222,
-//   -81.057,
-//   -99.5933,
-//   -117.245,
-//   -133.946,
-//   -154.881,
-//   -169.906,
-//   -184.836,
-//   -204.509,
-//   -224.476,
-//   -244.115,
-//   -276.808,
-//   -292.775,
-//   -311.913,
-//   -548.692,
-//   -592.263,
-// ];
 
-G = 6.6743 * 10 ** (-11);
-c = 299792458;
-Mo = 1.989 * 10 ** 30;
-Mc = 1.248866 * Mo;
-Mp = 1.338186 * Mo;
-Pb = 0.10225155555593921919 * 86400;
-e = 0.0877774229;
-dPdT = (-192 * Math.PI * G **(5/3)) / (5 * c ** 5) *
-  ( Pb / (2*Math.PI))**(-5/3) *
-  (1 - e**2)**(-7/2) *
-  (1 + 73.0/24.0 * e**2 + 37.0/96.0 * e**4) *
-  (Mp * Mc / (Mp + Mc)**(1/3));
-
-console.log(dPdT);
-
-
-const T0diff = [];
+let calcT0diff = [];
+let theoryT0diff = [];
 for (let i = 0; i < deltaTyear.length; i++) {
-  T0diff.push( 1e3 * dPdT * (deltaTyear[i] * 86400 * 365) ** 2 / Pb / 2);
+  calcT0diff.push(NaN);
+  theoryT0diff.push(NaN);
 }
-console.log(T0diff);
+console.log(theoryT0diff);
 
 
 
 function residual_calc(data, model) {
   const result = [];
-  console.log("data:", data);
-  console.log("model:", model);
   for (let i = 0; i < model.length; i++) {
     const difference = data[i] - model[i];
     result.push(difference);
@@ -148,18 +103,18 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('data-form').addEventListener('submit', function (event) {
       event.preventDefault();
       // Read data from the input fields and store it in an array
-      const inputDataArray = [];
+      calcT0diff = [];
       for (let i = 1; i <= 26; i++) {
         const inputField = document.getElementById(`data${i}`);
         const inputValue = parseFloat(inputField.value);
-        inputDataArray.push(inputValue);
+        calcT0diff.push(inputValue);
       }
-      console.log(inputDataArray);
+      console.log(calcT0diff);
 
       // Update the plot with all the traces
-      Plotly.restyle('plot', {'y': [inputDataArray]}, 0);
+      Plotly.restyle('plot', {'y': [calcT0diff]}, 0);
 
-      residual_array = residual_calc(inputDataArray, T0diff);
+      residual_array = residual_calc(calcT0diff, theoryT0diff);
       console.log("residual_array:", residual_array);
       Plotly.restyle('residual', {'y': [residual_array]}, 0);
   });
@@ -168,7 +123,45 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('plot_expected').addEventListener('submit', function (event) {
     event.preventDefault();
 
+    // Read data from the input fields and store it in an array
+    var mc = parseFloat(document.getElementById("mc").value);
+    if ( isNaN(mc) ) {
+      mc = 1.248866;
+    }
+    var mp = parseFloat(document.getElementById("mp").value);
+    if ( isNaN(mp) ) {
+      mp = 1.338186;
+    }
+    var Pb = parseFloat(document.getElementById("Pb").value);
+    if ( isNaN(Pb) ) {
+      Pb = 0.10225155555593921919 * 86400;
+    }
+    var e = parseFloat(document.getElementById("e").value);
+    if ( isNaN(e) ) {
+      e = 0.0877774229;
+    }
+
+    G = 6.6743 * 10 ** (-11);
+    c = 299792458;
+    Mo = 1.989 * 10 ** 30;
+    dPdT = (-192 * Math.PI * G **(5/3)) / (5 * c ** 5) *
+      ( Pb / (2*Math.PI))**(-5/3) *
+      (1 - e**2)**(-7/2) *
+      (1 + 73.0/24.0 * e**2 + 37.0/96.0 * e**4) *
+      (mp * Mo * mc * Mo / (mp * Mo + mc * Mo)**(1/3));
+
+    theoryT0diff = [];
+    for (let i = 0; i < deltaTyear.length; i++) {
+      theoryT0diff.push( 1e3 * dPdT * (deltaTyear[i] * 86400 * 365) ** 2 / Pb / 2);
+    }
+    console.log("theoryT0diff", theoryT0diff);
+    console.log("calcT0diff:", calcT0diff);
+
     // Update the plot with all the traces
-    Plotly.restyle('plot', {'y': [T0diff]}, 1);
+    Plotly.restyle('plot', {'y': [theoryT0diff]}, 1);
+
+    residual_array = residual_calc(calcT0diff, theoryT0diff);
+    console.log("residual_array:", residual_array);
+    Plotly.restyle('residual', {'y': [residual_array]}, 0);
   });
 });
