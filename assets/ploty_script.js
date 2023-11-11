@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
     height: 600,
     title: 'Change in the Double Pulsar Peristron',
     xaxis: { title: 'Delta T (years)' },
-    yaxis: { title: 'Peristron difference (milliseconds)' },
+    yaxis: { title: 'Periastron difference (milliseconds)' },
   };
 
   // Render the empty plot on page load
