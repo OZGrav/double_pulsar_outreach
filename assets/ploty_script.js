@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       // Read data from the input fields and store it in an array
       const inputDataArray = [];
-      for (let i = 1; i <= 27; i++) {
+      for (let i = 1; i <= 26; i++) {
         const inputField = document.getElementById(`data${i}`);
         const inputValue = parseFloat(inputField.value);
         inputDataArray.push(inputValue);
