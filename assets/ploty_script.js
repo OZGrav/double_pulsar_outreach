@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     var Pb = parseFloat(document.getElementById("Pb").value);
     if ( isNaN(Pb) ) {
-      Pb = 0.10225155555593921919 * 86400;
+      Pb = 0.10225155555593921919;
     }
     var e = parseFloat(document.getElementById("e").value);
     if ( isNaN(e) ) {
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     c = 299792458;
     Mo = 1.989 * 10 ** 30;
     dPdT = (-192 * Math.PI * G **(5/3)) / (5 * c ** 5) *
-      ( Pb / (2*Math.PI))**(-5/3) *
+      ( Pb * 86400 / (2*Math.PI))**(-5/3) *
       (1 - e**2)**(-7/2) *
       (1 + 73.0/24.0 * e**2 + 37.0/96.0 * e**4) *
       (mp * Mo * mc * Mo / (mp * Mo + mc * Mo)**(1/3));
