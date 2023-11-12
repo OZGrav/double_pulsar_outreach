@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     theoryT0diff = [];
     for (let i = 0; i < deltaTyear.length; i++) {
-      theoryT0diff.push( 1e3 * dPdT * (deltaTyear[i] * 86400 * 365) ** 2 / Pb / 2);
+      theoryT0diff.push( 1e3 * dPdT * (deltaTyear[i] * 86400 * 365) ** 2 / (Pb * 86400) / 2);
     }
     console.log("theoryT0diff", theoryT0diff);
     console.log("calcT0diff:", calcT0diff);
