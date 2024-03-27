@@ -243,8 +243,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const newY = days.map(x => sinEquation(x, amplitude, phase));
       console.log("newY:", newY);
       Plotly.restyle('plot', {'y': [newY]}, 0);
-      // const displayDiv = document.getElementById('fit-value');
-      // displayDiv.innerHTML = phase*1000;
+      const displayDiv = document.getElementById('fit-value');
+      displayDiv.innerHTML = -amplitude_ms;
 
       // Update residual
       const newResidual = residual_calc(residuals, newY);
