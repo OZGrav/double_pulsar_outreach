@@ -113,7 +113,7 @@ function parseDataFile(content) {
   lines.forEach(line => {
     const [value1, value2] = line.split(' ').map(parseFloat);
     days.push(value1 - 0.10225155555593921919 * epoch_orbit[epoch_url]);
-    residuals.push(value2*10e3);
+    residuals.push(value2 * 1e3); // Convert from ms to s
   });
 
   return { days, residuals };
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const displayDiv = document.getElementById('true-value');
     displayDiv.innerHTML = epoch_delay[epoch_url];
 
-    const initialAmplitude = 1;
+    const initialAmplitude = 0.1;
     const initialPeriod = 0.1;
     const initialPhase = 0;
     const initialSin = [days.map(x => sinEquation(x, initialAmplitude, initialPhase))];
@@ -169,14 +169,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const amplitudeSliderSteps = [];
-    const phaseSliderSteps = [];
-    for (let a = 0; a <= 8; a += 0.1) {
+    for (let a = 0; a <= 800; a += 10) {
       amplitudeSliderSteps.push({
         method: 'relayout',
-        label: a.toFixed(1),
-        args: ['yaxis.range', [-a * 1.2, a * 1.2]],
+        label: a.toFixed(0),
+        args: ['yaxis.range', [-a * 1.2e-3, a * 1.2e-3]],
       });
     }
+    const phaseSliderSteps = [];
     for (let a = -8000; a <= 0 ; a += 10) {
       phaseSliderSteps.push({
         method: 'relayout',
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
         steps: amplitudeSliderSteps,
         active: 10,  // Initial position of the slider
         currentvalue: {
-          prefix: 'Amplitude: ',
+          prefix: 'Amplitude (ms): ',
           xanchor: 'left',
           visible: true,
           offset: 25,
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
       width: 800,
       height: 600,
       xaxis: { title: 'MJD' },
-      yaxis: { title: 'ToA residuals (ms)' },
+      yaxis: { title: 'ToA residuals (s)' },
       sliders: sliders,
     };
 
@@ -232,12 +232,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     plot.on('plotly_sliderchange', (event) => {
       if (event.slider.currentvalue.prefix.startsWith('Amplitude')) {
-        amplitude = parseFloat(event.step.label);
+        amplitude_ms = parseFloat(event.step.label);
       }
       if (event.slider.currentvalue.prefix.startsWith('Phase')) {
         phase = parseFloat(event.step.label);
       }
       console.log("phase:", phase);
+      amplitude = amplitude_ms / 1e3;
+      console.log("amplitude:", amplitude);
       const newY = days.map(x => sinEquation(x, amplitude, phase));
       console.log("newY:", newY);
       Plotly.restyle('plot', {'y': [newY]}, 0);
