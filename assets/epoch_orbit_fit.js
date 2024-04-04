@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
           prefix: 'Phase offset (s): ',
           xanchor: 'right',
           visible: true,
-          offset: 50,
+          offset: 75,
         },
       },
       {
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
           prefix: 'Residual offset (s): ',
           xanchor: 'right',
           visible: true,
-          offset: 75,
+          offset: 125,
         },
       },
     ];
