@@ -3,7 +3,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const epoch_url = urlParams.get('epoch');
 if (epoch_url) {
   document.title = "Epoch " + epoch_url + " Orbit Fit";
-  console.log(document.querySelector('.project-name').innerText);
+  // console.log(document.querySelector('.project-name').innerText);
   document.querySelector('.project-name').innerText = "Epoch " + epoch_url + " Orbit Fit";
 }
 const epoch_zero_pad = epoch_url < 10 ? '0' + epoch_url : epoch_url;
@@ -69,7 +69,7 @@ const epoch_delay = {
 };
 
 // convert phase from ms to days
-const sinEquation = (x, amplitude, phase) => amplitude * Math.sin( ( 2 * Math.PI / 0.10225155555593921919 ) * ( x + ( phase / 86400 ) ) );
+const sinEquation = (x, amplitude, phase, yOffset) => amplitude * Math.sin( ( 2 * Math.PI / 0.10225155555593921919 ) * ( x + ( phase / 86400 ) ) ) + yOffset;
 
 function range(start, end, step = 1) {
   return Array.from({ length: Math.floor((end - start) / step) + 1 }, (_, i) => start + i * step);
@@ -125,23 +125,25 @@ document.addEventListener('DOMContentLoaded', function () {
   .then(result => {
     // Process the result here
     const { days, residuals } = result;
-    console.log("days:", days);
-    console.log("residuals:", residuals);
+    // console.log("days:", days);
+    // console.log("residuals:", residuals);
 
     // Load real value
     const displayDiv = document.getElementById('true-value');
     displayDiv.innerHTML = epoch_delay[epoch_url];
 
     const initialAmplitude = 0.1;
-    const initialPeriod = 0.1;
     const initialPhase = 0;
-    const initialSin = [days.map(x => sinEquation(x, initialAmplitude, initialPhase))];
+    const initialYOffset = 0;
+    const initialSin = [days.map(x => sinEquation(x, initialAmplitude, initialPhase, initialYOffset))];
 
     let amplitude = initialAmplitude;
-    let period = initialPeriod;
+    let amplitude_ms = initialAmplitude *1e3;
     let phase = initialPhase;
+    let yOffset = initialYOffset;
+    let yOffset_ms = initialYOffset * 1e3;
     let fitResidual = residual_calc(initialSin[0], residuals);
-    console.log("initialSin:", initialSin);
+    // console.log("initialSin:", initialSin);
 
 
     const modelTrace = {
@@ -184,6 +186,14 @@ document.addEventListener('DOMContentLoaded', function () {
         args: [],
       });
     }
+    const ySliderSteps = [];
+    for (let a = -30; a <= 30 ; a += 3) {
+      ySliderSteps.push({
+        method: 'relayout',
+        label: a.toFixed(0),
+        args: [],
+      });
+    }
 
     const sliders = [
       {
@@ -206,6 +216,16 @@ document.addEventListener('DOMContentLoaded', function () {
           offset: 75,
         },
       },
+      {
+        steps: ySliderSteps,
+        active: 0,  // Initial position of the slider
+        currentvalue: {
+          prefix: 'Residual offset (s): ',
+          xanchor: 'right',
+          visible: true,
+          offset: 125,
+        },
+      },
     ];
 
     const layout = {
@@ -225,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
       width: 800,
       height: 400,
       xaxis: { title: 'MJD' },
-      yaxis: { title: 'Residual between model and fit', autorange: false, range: [-3, 3] },
+      yaxis: { title: 'Residual between model and fit', autorange: false, range: [-0.05e-3 * epoch_orbit[epoch_url], 0.05e-3 * epoch_orbit[epoch_url]] },
     };
     Plotly.newPlot('residual', [residualTrace], residualLayout);
     Plotly.restyle('residual', {'y': [fitResidual]}, 0);
@@ -237,11 +257,15 @@ document.addEventListener('DOMContentLoaded', function () {
       if (event.slider.currentvalue.prefix.startsWith('Phase')) {
         phase = parseFloat(event.step.label);
       }
-      console.log("phase:", phase);
+      if (event.slider.currentvalue.prefix.startsWith('Residual')) {
+        yOffset_ms = parseFloat(event.step.label);
+      }
+      // console.log("phase:", phase);
       amplitude = amplitude_ms / 1e3;
-      console.log("amplitude:", amplitude);
-      const newY = days.map(x => sinEquation(x, amplitude, phase));
-      console.log("newY:", newY);
+      // console.log("amplitude:", amplitude);
+      yOffset = yOffset_ms / 1e3;
+      const newY = days.map(x => sinEquation(x, amplitude, phase, yOffset));
+      // console.log("newY:", newY);
       Plotly.restyle('plot', {'y': [newY]}, 0);
       const displayDiv = document.getElementById('fit-value');
       displayDiv.innerHTML = -amplitude_ms;
