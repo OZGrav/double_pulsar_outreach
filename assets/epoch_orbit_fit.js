@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     const ySliderSteps = [];
-    for (let a = -30; a <= 30 ; a += 3) {
+    for (let a = -50; a <= 50 ; a += 5) {
       ySliderSteps.push({
         method: 'relayout',
         label: a.toFixed(0),
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
           prefix: 'Phase offset (s): ',
           xanchor: 'right',
           visible: true,
-          offset: 75,
+          offset: 50,
         },
       },
       {
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
           prefix: 'Residual offset (s): ',
           xanchor: 'right',
           visible: true,
-          offset: 125,
+          offset: 75,
         },
       },
     ];
